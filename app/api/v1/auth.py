@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.deps import get_auth_service, get_current_user
 from app.models.user import User
-from app.schemas.auth import RegisterRequest, LoginRequest, AuthResponse
+from app.schemas.auth import RegisterRequest, LoginRequest, AuthResponse, GoogleAuthRequest
 from app.schemas.user import UserRead
 from app.services.auth_service import AuthService
 
@@ -34,6 +34,14 @@ async def login(
         json_data = await request.json()
         req = LoginRequest.model_validate(json_data)
         return await auth_service.login(email=req.email, password=req.password)
+
+
+@router.post("/google", response_model=AuthResponse)
+async def google_login(
+    req: GoogleAuthRequest,
+    auth_service: AuthService = Depends(get_auth_service),
+):
+    return await auth_service.google_login(req)
 
 
 @router.get("/me", response_model=UserRead)

@@ -8,6 +8,13 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class GoogleAuthRequest(BaseModel):
+    email: EmailStr
+    name: Optional[str] = "Google User"
+    phone: Optional[str] = None
+    google_id: Optional[str] = None
+
+
 class RegisterRequest(BaseModel):
     name: str = Field(..., min_length=2, max_length=100)
     email: EmailStr
